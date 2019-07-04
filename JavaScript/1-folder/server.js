@@ -27,7 +27,7 @@ const serveFile = name => {
 };
 
 http.createServer((req, res) => {
-  const { url } = req; //.substring(1)
+  const { url } = req;
   const name = url === '/' ? '/index.html' : url;
   const fileExt = path.extname(name).substring(1);
   const mimeType = MIME_TYPES[fileExt] || MIME_TYPES.html;
