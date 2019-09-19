@@ -1,2 +1,1 @@
-# ServeStatic
-Serve static content with HTTP
+# Serve static content with HTTP
