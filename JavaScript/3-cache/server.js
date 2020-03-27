@@ -25,11 +25,11 @@ const cacheFile = async filePath => {
 };
 
 const cacheDirectory = async directoryPath => {
-  const items = await fs.readdir(directoryPath, { withFileTypes: true });
-  for (const item of items) {
-    const itemPath = path.join(directoryPath, item.name);
-    if (item.isDirectory()) cacheDirectory(itemPath);
-    else cacheFile(itemPath);
+  const files = await fs.readdir(directoryPath, { withFileTypes: true });
+  for (const file of files) {
+    const filePath = path.join(directoryPath, file.name);
+    if (file.isDirectory()) cacheDirectory(filePath);
+    else cacheFile(filePath);
   }
 };
 
