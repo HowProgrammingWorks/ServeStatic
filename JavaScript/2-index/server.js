@@ -16,7 +16,7 @@ const MIME_TYPES = {
   svg: 'image/svg+xml',
 };
 
-const serveFile = name => {
+const serveFile = (name) => {
   const filePath = path.join(STATIC_PATH, name);
   if (!filePath.startsWith(STATIC_PATH)) {
     console.log(`Can't be served: ${name}`);
@@ -27,7 +27,7 @@ const serveFile = name => {
   return stream;
 };
 
-const folderIndex = name => {
+const folderIndex = (name) => {
   const folderPath = path.join(STATIC_PATH, name);
   if (!folderPath.startsWith(STATIC_PATH)) {
     console.log(`Can't generate index for: ${name}`);
@@ -47,7 +47,7 @@ const folderIndex = name => {
           else files.push(item.name);
         }
         const list = folders.concat(files)
-          .map(item => `<li><a href="${item}">${item}</a></li>`)
+          .map((item) => `<li><a href="${item}">${item}</a></li>`)
           .join('\n');
         stream.push(`<h2>Directory index:</h2><ul>${list}</ul>`);
         stream.push(null);

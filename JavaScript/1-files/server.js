@@ -15,7 +15,7 @@ const MIME_TYPES = {
   svg: 'image/svg+xml',
 };
 
-const serveFile = name => {
+const serveFile = (name) => {
   const filePath = path.join(STATIC_PATH, name);
   if (!filePath.startsWith(STATIC_PATH)) {
     console.log(`Can't be served: ${name}`);

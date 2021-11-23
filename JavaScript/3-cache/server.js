@@ -18,13 +18,13 @@ const MIME_TYPES = {
 
 const cache = new Map();
 
-const cacheFile = async filePath => {
+const cacheFile = async (filePath) => {
   const data = await fs.readFile(filePath, 'utf8');
   const key = filePath.substring(STATIC_PATH_LENGTH);
   cache.set(key, data);
 };
 
-const cacheDirectory = async directoryPath => {
+const cacheDirectory = async (directoryPath) => {
   const files = await fs.readdir(directoryPath, { withFileTypes: true });
   for (const file of files) {
     const filePath = path.join(directoryPath, file.name);
