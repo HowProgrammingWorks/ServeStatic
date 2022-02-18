@@ -15,23 +15,26 @@ const MIME_TYPES = {
   svg: 'image/svg+xml',
 };
 
-const serveFile = (name) => {
-  const filePath = path.join(STATIC_PATH, name);
-  if (!filePath.startsWith(STATIC_PATH)) {
-    console.log(`Can't be served: ${name}`);
-    return null;
-  }
-  const stream = fs.createReadStream(filePath);
-  console.log(`Served: ${name}`);
-  return stream;
+const access = (file) => fs.promises.access(file).then(() => true, () => false);
+
+const prepareFile = async (url) => {
+  const paths = [STATIC_PATH, url];
+  if (url.endsWith('/')) paths.push('index.html');
+  const filePath = path.join(...paths);
+  const pathTraversal = !filePath.startsWith(STATIC_PATH);
+  const exists = await access(filePath);
+  const found = !pathTraversal && exists;
+  const streamPath = found ? filePath : STATIC_PATH + '/404.html';
+  const ext = path.extname(streamPath).substring(1);
+  const stream = fs.createReadStream(streamPath);
+  return { found, ext, stream };
 };
 
-http.createServer((req, res) => {
-  const { url } = req;
-  const name = url === '/' ? '/index.html' : url;
-  const fileExt = path.extname(name).substring(1);
-  const mimeType = MIME_TYPES[fileExt] || MIME_TYPES.html;
-  res.writeHead(200, { 'Content-Type': mimeType });
-  const stream = serveFile(name);
-  if (stream) stream.pipe(res);
+http.createServer(async (req, res) => {
+  const file = await prepareFile(req.url);
+  const statusCode = file.found ? 200 : 404;
+  const mimeType = MIME_TYPES[file.ext] || MIME_TYPES.html;
+  res.writeHead(statusCode, { 'Content-Type': mimeType });
+  file.stream.pipe(res);
+  console.log(`${req.method} ${req.url} ${statusCode}`);
 }).listen(8000);
