@@ -4,23 +4,28 @@ const fs = require('fs').promises;
 const http = require('http');
 const path = require('path');
 
-const STATIC_PATH = path.join(process.cwd(), './static');
-const STATIC_PATH_LENGTH = STATIC_PATH.length;
+const PORT = 8000;
 
 const MIME_TYPES = {
+  default: 'application/octet-stream',
   html: 'text/html; charset=UTF-8',
   js: 'application/javascript; charset=UTF-8',
+  json: 'application/json',
   css: 'text/css',
   png: 'image/png',
+  jpg: 'image/jpg',
+  gif: 'image/gif',
   ico: 'image/x-icon',
   svg: 'image/svg+xml',
 };
+
+const STATIC_PATH = path.join(process.cwd(), './static');
 
 const cache = new Map();
 
 const cacheFile = async (filePath) => {
   const data = await fs.readFile(filePath, 'utf8');
-  const key = filePath.substring(STATIC_PATH_LENGTH);
+  const key = filePath.substring(STATIC_PATH.length);
   cache.set(key, data);
 };
 
@@ -36,10 +41,13 @@ const cacheDirectory = async (directoryPath) => {
 cacheDirectory(STATIC_PATH);
 
 http.createServer((req, res) => {
-  const { url } = req;
-  const fileExt = path.extname(url).substring(1);
-  const mimeType = MIME_TYPES[fileExt] || MIME_TYPES.html;
-  res.writeHead(200, { 'Content-Type': mimeType });
-  const data = cache.get(url);
+  const ext = path.extname(req.url).substring(1).toLowerCase();
+  const mimeType = MIME_TYPES[ext] || MIME_TYPES.html;
+  const data = cache.get(req.url);
+  const statusCode = data ? 200 : 404;
+  res.writeHead(statusCode, { 'Content-Type': mimeType });
   res.end(data);
-}).listen(8000);
+  console.log(`${req.method} ${req.url} ${statusCode}`);
+}).listen(PORT);
+
+console.log(`Server running at http://127.0.0.1:${PORT}/`);
