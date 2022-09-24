@@ -1,8 +1,8 @@
 'use strict';
 
-const fs = require('fs').promises;
-const http = require('http');
-const path = require('path');
+const fs = require('node:fs').promises;
+const http = require('node:http');
+const path = require('node:path');
 
 const PORT = 8000;
 

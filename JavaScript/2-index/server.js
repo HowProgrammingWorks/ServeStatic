@@ -1,9 +1,9 @@
 'use strict';
 
-const fs = require('fs');
-const http = require('http');
-const path = require('path');
-const { Readable } = require('stream');
+const fs = require('node:fs');
+const http = require('node:http');
+const path = require('node:path');
+const { Readable } = require('node:stream');
 
 const PORT = 8000;
 
