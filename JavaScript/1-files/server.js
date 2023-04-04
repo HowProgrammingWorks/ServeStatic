@@ -17,6 +17,7 @@ const MIME_TYPES = {
   gif: 'image/gif',
   ico: 'image/x-icon',
   svg: 'image/svg+xml',
+  txt: 'text/plain',
 };
 
 const STATIC_PATH = path.join(process.cwd(), './static');
